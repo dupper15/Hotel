@@ -179,7 +179,7 @@
             // 
             // uC_Employee1
             // 
-            this.uC_Employee1.BackColor = System.Drawing.Color.Black;
+            this.uC_Employee1.BackColor = System.Drawing.Color.White;
             this.uC_Employee1.Location = new System.Drawing.Point(-2, -4);
             this.uC_Employee1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.uC_Employee1.Name = "uC_Employee1";
