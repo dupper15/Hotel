@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.SmallForm;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,8 +11,6 @@ using System.Windows.Forms;
 
 namespace Hotel.All_user_control
 {
-   
-
     public partial class UC_Employee : UserControl
     {
         function fn = new function();
@@ -21,69 +20,58 @@ namespace Hotel.All_user_control
             InitializeComponent();
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void guna2Button1_Click(object sender, EventArgs e)
         {
-
-        }
-        public void getMaxID()
-        {
-            query = "select max(eid) from employee";
-            DataSet ds = fn.getData(query);
-            if (ds.Tables[0].Rows[0][0].ToString()!="")
+            if(txtName.Text!="" && txtMobile.Text!="" && txtEmail.Text!=""&& cbGender.Text != "" && txtUsername.Text !="" && txtPassword.Text !="" && txtPosition.Text !="")
             {
-                Int64 num = Int64.Parse(ds.Tables[0].Rows[0][0].ToString());
-                labelToSet.Text= (num+1).ToString();
-            }
-        }
-        private void tabPage3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void UC_Employee_Load(object sender, EventArgs e)
-        {
-            getMaxID();
-        }
-
-        private void btnRegistation_Click(object sender, EventArgs e)
-        {
-            if(txtName.Text!=""&&txtMobile.Text!=""&&txtGender.Text!=""&&txtEmail.Text!=""&&txtUsername.Text != "" && txtPassword.Text != "")
-            {
-                String name = txtName.Text;
-                Int64 mobile = Int64.Parse(txtMobile.Text);
-                String gender = txtGender.Text;
-                String email = txtEmail.Text;
-                String username = txtUsername.Text; 
-                String password = txtPassword.Text; 
-
-                query = "insert into employee (ename, mobile, gender, emailid, username, pass) values ('"+name+"',"+mobile +",'"+gender+"','"+email+"','"+username+"','"+password+"')";
-                fn.setData(query, "Đăng Ký Nhân Viên Thành Công!");
+                string name = txtName.Text;
+                Int64 mobile = Convert.ToInt64(txtMobile.Text);
+                string email = txtEmail.Text;
+                string username = txtUsername.Text;
+                string password = txtPassword.Text;
+                string gender = cbGender.Text;
+                int position;
+                if (txtPosition.Text == "Quản Lý")
+                    position = 1;
+                else
+                    position = 2;
+                query = "insert into employee (ename, mobile, gender, emailid, username, pass, position) values ('" + name + "'," + mobile + ",'" + gender + "','" + email + "','" + username + "','" + password + "','"+position + "')";
+                fn.setData(query, "Đăng Ký Nhân Viên Thành Công!!");
                 clearAll();
                 getMaxID();
             }
         }
         public void clearAll()
         {
-            txtName.Clear();
-            txtMobile.Clear();
-            txtUsername.Clear();
-            txtGender.SelectedIndex = -1;
             txtEmail.Clear();
+            txtUsername.Clear();
             txtPassword.Clear();
+            txtMobile.Clear();
+            txtName.Clear();
+            cbGender.SelectedIndex = -1;
+        }
+        private void UC_Employee_Load(object sender, EventArgs e)
+        {
+            
+        }
+        public void getMaxID()
+        {
+            query = "select max(eid) from employee";
+            DataSet ds = fn.getData(query);
+            if (ds.Tables[0].Rows[0][0].ToString() != "")
+            {
+                Int64 num = Int64.Parse(ds.Tables[0].Rows[0][0].ToString());
+                lbToSet.Text = (num+1).ToString();
+            }
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
+        private void tabEmployee_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl1.SelectedIndex == 1)
+            if(tabEmployee.SelectedIndex == 1)
             {
                 setEmployee(guna2DataGridView1);
             }
-            else if (tabControl1.SelectedIndex == 2)
+            else if (tabEmployee.SelectedIndex == 2)
             {
                 setEmployee(guna2DataGridView2);
             }
@@ -98,39 +86,50 @@ namespace Hotel.All_user_control
         {
             if (txtID.Text != "")
             {
-                // Kiểm tra xem eid có tồn tại không
-                if (IsEmployeeExists(int.Parse(txtID.Text)))
+                if (MessageBox.Show("Bạn có chắc chắn không", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
-                    if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Xác Nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                    {
-                        query = "delete from employee where eid = " + txtID.Text + "";
-                        fn.setData(query, "Thông Tin Nhân Viên Đã Được Xóa!!");
-                        tabControl1_SelectedIndexChanged(this, null);
-                        txtID.Clear();
-                        txtID.Focus();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Nhân viên không tồn tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    txtID.Clear();
-                    txtID.Focus();
+                    query = "delete from employee where eid = " + txtID.Text + "";
+                    fn.setData(query, "Thông Tin Nhân Viên Đã Được Xóa!");
+                    tabEmployee_SelectedIndexChanged(this, null);
                 }
             }
-        }
-
-        // Hàm kiểm tra sự tồn tại của nhân viên
-        private bool IsEmployeeExists(int employeeId)
-        {
-            query = "SELECT COUNT(*) FROM employee WHERE eid = " + employeeId;
-            int count = Convert.ToInt32(fn.getData(query).Tables[0].Rows[0][0]);
-
-            return count > 0;
         }
 
         private void UC_Employee_Leave(object sender, EventArgs e)
         {
             clearAll();
+        }
+
+        private void guna2DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Kiểm tra xem người dùng đã chọn một ô hay một hàng
+            if (e.RowIndex > 0)
+            {
+                DataGridViewRow selectedRow = guna2DataGridView1.Rows[e.RowIndex];
+
+                // Lấy dữ liệu từ hàng được chọn (ví dụ: cột đầu tiên)
+                string x1 = selectedRow.Cells[0].Value.ToString();
+                string x2 = selectedRow.Cells[1].Value.ToString();
+                string x3 = selectedRow.Cells[2].Value.ToString();
+                string x4 = selectedRow.Cells[3].Value.ToString();
+                string x5 = selectedRow.Cells[4].Value.ToString();
+                string x6 = selectedRow.Cells[5].Value.ToString();
+                string x7 = selectedRow.Cells[6].Value.ToString();
+
+                // Hiển thị form mới và chuyển dữ liệu nếu cần
+                EmployeeInformation form = new EmployeeInformation(x1, x2, x3, x4, x5, x6, x7);
+                form.Show();
+            }
+        }
+
+        private void guna2DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

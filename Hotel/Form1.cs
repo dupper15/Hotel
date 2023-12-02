@@ -14,6 +14,7 @@ namespace Hotel
     {
         function fn = new function();
         string query;
+
         public Form1()
         {
             InitializeComponent();
@@ -33,10 +34,19 @@ namespace Hotel
         {
             query = "select username, pass from employee where username = '" + txbUsername.Text + "' and pass = '" + txbPassword.Text + "'";
             DataSet ds = fn.getData(query);
-            if(ds.Tables[0].Rows.Count!=0 ||(txbUsername.Text == "admin" && txbPassword.Text == "admin"))
+            string query1 = "select position from employee where username = '" + txbUsername.Text + "' and pass = '" + txbPassword.Text + "'";
+            DataSet ds1 = fn.getData(query1);
+            int position = 0;
+            if (ds.Tables[0].Rows.Count !=0 || (txbUsername.Text=="admin"&&txbPassword.Text =="admin"))
             {
                 labelError.Visible = false;
-                Dashboard dash = new Dashboard();
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    position = Convert.ToInt32(ds1.Tables[0].Rows[0]["position"]);
+                }
+                if (txbUsername.Text == "admin" && txbPassword.Text == "admin")
+                    position = 1;
+                Dashboard dash = new Dashboard(position);
                 this.Hide();
                 dash.Show();
             }
