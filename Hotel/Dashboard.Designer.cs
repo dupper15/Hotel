@@ -160,7 +160,7 @@
             this.btAddroom.Name = "btAddroom";
             this.btAddroom.Size = new System.Drawing.Size(252, 93);
             this.btAddroom.TabIndex = 0;
-            this.btAddroom.Text = "Thêm Phòng";
+            this.btAddroom.Text = "Thêm Phòng sua";
             this.btAddroom.Click += new System.EventHandler(this.guna2Button3_Click);
             // 
             // panel2
