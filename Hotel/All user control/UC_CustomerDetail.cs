@@ -19,39 +19,29 @@ namespace Hotel.All_user_control
             InitializeComponent();
         }
 
-        private void UC_CustomerDetail_Load(object sender, EventArgs e)
+        private void txtSearch_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if(txtSearch.SelectedIndex == 0)
+            {
+                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid = rooms.roomid ";
+                getRecord(query);
+            }
+            else if(txtSearch.SelectedIndex == 1)
+            {
+                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid = rooms.roomid where checkout is null";
+                getRecord(query);
+            }
+            else if( txtSearch.SelectedIndex == 2)
+            {
+                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid = rooms.roomid where checkout is not null";
+                getRecord(query);
+            }
+            
         }
-
-        
-        private void getRecord(String query)
+        private void getRecord (string query)
         {
             DataSet ds = fn.getData(query);
             guna2DataGridView1.DataSource = ds.Tables[0];
-        }
-
-        private void txtSearchBy_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (txtSearchBy.SelectedIndex == 0)
-            {
-                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid=rooms.roomid";
-                getRecord(query);
-            }
-            else if (txtSearchBy.SelectedIndex == 1)
-            {
-                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid=rooms.roomid where checkout is null";
-                getRecord(query);
-            }
-            else if (txtSearchBy.SelectedIndex == 2)
-            {
-                query = "select customer.cid, customer.cname, customer.mobile, customer.nationality, customer.gender, customer.dob, customer.idproof, customer.address, customer.checkin, rooms.roomNo, rooms.roomType, rooms.bed, rooms.price from customer inner join rooms on customer.roomid=rooms.roomid where checkout is not null";
-                getRecord(query);
-            }
-        }
-
-        private void UC_CustomerDetail_Leave(object sender, EventArgs e)
-        {
         }
     }
 }
